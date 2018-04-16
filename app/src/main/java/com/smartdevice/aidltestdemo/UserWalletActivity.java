@@ -63,10 +63,6 @@ public class UserWalletActivity extends AppCompatActivity {
         banner_slider.setBanners(banners);
 
 
-
-
-
-
         cross.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,10 +70,6 @@ public class UserWalletActivity extends AppCompatActivity {
         startActivity(i);
             }
         });
-
-
-
-
 
 
         jsonBody= new JSONObject();

@@ -59,6 +59,7 @@ public class CardReader extends AppCompatActivity {
         // data card reader
         mfapi = Api.Create(CardReader.this);
         initAidCpak(this);
+
         allOfCardReader();
     }
 

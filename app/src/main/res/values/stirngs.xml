@@ -80,5 +80,8 @@
     <string name="signInSignIn">SIGN IN</string>
     <string name="ok">Ok</string>
 
+    <string name="msg_title">prompts</string>
+    <string name="msg_printing">printing</string>
+    <string name="msg_nopaper">printer out of paper, please load paper</string>
 
 </resources>
