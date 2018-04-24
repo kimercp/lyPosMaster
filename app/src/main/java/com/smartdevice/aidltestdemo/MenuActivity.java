@@ -3,12 +3,18 @@ package com.smartdevice.aidltestdemo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.morefun.ypossdk.misc.Handware;
 import com.morefun.ypossdk.misc.Misc;
@@ -16,8 +22,20 @@ import com.morefun.ypossdk.pub.Api;
 import com.morefun.ypossdk.pub.listener.PrintWriteListener;
 import com.morefun.ypossdk.pub.param.PrintWriteParam;
 import com.morefun.ypossdk.pub.result.PrintWriteResult;
+import com.smartdevice.aidltestdemo.base.BaseActivity;
+import com.smartdevice.aidltestdemo.manager.ActionService;
 
-public class MenuActivity extends AppCompatActivity {
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+
+import static com.smartdevice.aidltestdemo.print.PrintFunc.PrintWriteWithPage;
+import static com.smartdevice.aidltestdemo.print.PrintFunc.osl_print_add;
+
+public class MenuActivity extends BaseActivity {
+
+    public static String SCAN_SALE= "Scan QR Code";
 
     LinearLayout card, analytics, events, discovery;
     ImageView first, second;
@@ -27,13 +45,20 @@ public class MenuActivity extends AppCompatActivity {
     SharedPreferences config = null;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
         //makeFullscreen();
 
         first = findViewById(R.id.first);
+        first.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActionService.Instance().Action(MenuActivity.this, SCAN_SALE);
+            }
+        });
+
         second = findViewById(R.id.second);
 
         discovery = findViewById(R.id.discovery);
@@ -80,14 +105,13 @@ public class MenuActivity extends AppCompatActivity {
 
     }
 
-    void refrushcsid( int csid)
-    {
+    void refrushcsid( int csid) {
         mfapi = Api.Create(this,csid);
         ac = new ActionItems( this , mfapi );
 //        this.setTitle( getString(R.string.activity_title_mid) + "(" + csid + ")") ;
     }
 
-    private static void initAidCpak(Context ctx){
+    private static void initAidCpak(Context ctx) {
         //(new File(Misc.m_app_data_path)).mkdirs();
         Misc.m_app_data_path = ctx.getFilesDir().getAbsolutePath() + "/";
         Misc.CreatInitDataFile(ctx, R.raw.f_capk_dat,  Misc.m_app_data_path + "F_capk.dat");
@@ -124,9 +148,9 @@ public class MenuActivity extends AppCompatActivity {
         Handware.Manager.PrintInit();
         PrintWriteParam pwparam = new PrintWriteParam();
 
-
 //        pwparam.setPrintdata(PrintDataEn());
         pwparam.setPrintdata(PrintData());
+
 
 
         mfapi.PrintWrite(pwparam, new PrintWriteListener() {
@@ -143,81 +167,81 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private String PrintDataEn() {
-        StringBuilder sbprint = new StringBuilder();
+        StringBuilder stringToPrint = new StringBuilder();
         //打印浓度
-        sbprint.append(Handware.Manager.Print_heat_factor(15));
+        stringToPrint.append(Handware.Manager.Print_heat_factor(15));
         //设置字体大小
-        sbprint.append(getprintstytle(4));
+        stringToPrint.append(getprintstytle(4));
         //设置字体居中
-        sbprint.append(Handware.Manager.Print_align(1));
-        sbprint.append("POS purchase order\r\n");
+        stringToPrint.append(Handware.Manager.Print_align(1));
+        stringToPrint.append("POS purchase order\r\n");
         //设置左对齐
-        sbprint.append(Handware.Manager.Print_align(0));
-        sbprint.append(getprintstytle(2));
-        sbprint.append("==============================\r\n");
+        stringToPrint.append(Handware.Manager.Print_align(0));
+        stringToPrint.append(getprintstytle(2));
+        stringToPrint.append("==============================\r\n");
 
-        sbprint.append(getprintitem("MERCHANT NAME", "Demo shop name"));
-        sbprint.append(getprintitem("MERCHANT NO.", "20321545656687"));
-        sbprint.append(getprintitem("TERMINAL NO.", "25689753"));
-        sbprint.append(getprintitem("OPERATOR NO.", "01"));
-        sbprint.append(getprintitem("ISS NO.", "1544"));
-        sbprint.append(getprintitem("ACQ NO.", "0121"));
+        stringToPrint.append(getprintitem("MERCHANT NAME", "Demo shop name"));
+        stringToPrint.append(getprintitem("MERCHANT NO.", "20321545656687"));
+        stringToPrint.append(getprintitem("TERMINAL NO.", "25689753"));
+        stringToPrint.append(getprintitem("OPERATOR NO.", "01"));
+        stringToPrint.append(getprintitem("ISS NO.", "1544"));
+        stringToPrint.append(getprintitem("ACQ NO.", "0121"));
 
-        sbprint.append(getprintstytle(1));
-        sbprint.append("CARD NUMBER\r\n");
+        stringToPrint.append(getprintstytle(1));
+        stringToPrint.append("CARD NUMBER\r\n");
 
-        sbprint.append(getprintstytle(3));
-        sbprint.append("62179390*****3426");
-        sbprint.append("\r\n");
+        stringToPrint.append(getprintstytle(3));
+        stringToPrint.append("62179390*****3426");
+        stringToPrint.append("\r\n");
 
 
-        sbprint.append(getprintstytle(1));
-        sbprint.append("TRANS TYPE");
-        sbprint.append("\r\n");
-        sbprint.append(getprintstytle(3));
-        sbprint.append("SALE");
-        sbprint.append("\r\n");
+        stringToPrint.append(getprintstytle(1));
+        stringToPrint.append("TRANS TYPE");
+        stringToPrint.append("\r\n");
+        stringToPrint.append(getprintstytle(3));
+        stringToPrint.append("SALE");
+        stringToPrint.append("\r\n");
 
-        sbprint.append(getprintitem("EXP DATE", "2029"));
+        stringToPrint.append(getprintitem("EXP DATE", "2029"));
 
-        sbprint.append(getprintitem("BATCH NO.", "000012"));
-        sbprint.append(getprintitem("VOUCHER NO.", "000001"));
-        sbprint.append(getprintitem("AUTH NO.", "56890547"));
+        stringToPrint.append(getprintitem("BATCH NO.", "000012"));
+        stringToPrint.append(getprintitem("VOUCHER NO.", "000001"));
+        stringToPrint.append(getprintitem("AUTH NO.", "56890547"));
 
-        sbprint.append(getprintitem("DATE/TIME", "2016-05-23 16:50:32"));
-        sbprint.append(getprintitem("REFER NO.", "365897453214"));
+        stringToPrint.append(getprintitem("DATE/TIME", "2016-05-23 16:50:32"));
+        stringToPrint.append(getprintitem("REFER NO.", "365897453214"));
 
-        sbprint.append(getprintstytle(1));
-        sbprint.append("AMOUNT");
-        sbprint.append("\r\n");
+        stringToPrint.append(getprintstytle(1));
+        stringToPrint.append("AMOUNT");
+        stringToPrint.append("\r\n");
 
-        sbprint.append(getprintstytle(3));
-        sbprint.append("RMB ");
-        sbprint.append("10.00");
-        sbprint.append("\r\n");
+        stringToPrint.append(getprintstytle(3));
+        stringToPrint.append("RMB ");
+        stringToPrint.append("10.00");
+        stringToPrint.append("\r\n");
 
-        sbprint.append(getprintstytle(2));
-        sbprint.append("==============================\r\n");
+        stringToPrint.append(getprintstytle(2));
+        stringToPrint.append("==============================\r\n");
 
-        sbprint.append(getprintstytle(1));
+        stringToPrint.append(getprintstytle(1));
         //输出空行
-        sbprint.append(Handware.Manager.Print_row_space(24));
-        sbprint.append("CARD HOLDER SIGNATURE\r\n");
-        sbprint.append(Handware.Manager.Print_row_space(72));
-        sbprint.append("--------------------------------------------\r\n");
+        stringToPrint.append(Handware.Manager.Print_row_space(24));
+        stringToPrint.append("CARD HOLDER SIGNATURE\r\n");
+        stringToPrint.append(Handware.Manager.Print_row_space(72));
+        stringToPrint.append("--------------------------------------------\r\n");
 
-        sbprint.append("I ACKNOWLEDGE	SATISFACTORY RECEIPT OF RELATIVE GOODS/SERVICES\r\n");
+        stringToPrint.append("I ACKNOWLEDGE	SATISFACTORY RECEIPT OF RELATIVE GOODS/SERVICES\r\n");
 
-        sbprint.append(getprintstytle(2));
-        sbprint.append("MERCHANT COPY\r\n");
+        stringToPrint.append(getprintstytle(2));
+        stringToPrint.append("MERCHANT COPY\r\n");
 
-        sbprint.append(Handware.Manager.Print_row_space(24));
+        stringToPrint.append(Handware.Manager.Print_row_space(24));
 
-        sbprint.append(getprintstytle(1));
-        sbprint.append("---X---X---X---X---X--X--X--X--X--X--X--X--X--\r\n");
+        stringToPrint.append(getprintstytle(1));
+        stringToPrint.append("---X---X---X---X---X--X--X--X--X--X--X--X--X--\r\n");
 
-        sbprint.append(Handware.Manager.Print_row_space(108));
-        return sbprint.toString();
+        stringToPrint.append(Handware.Manager.Print_row_space(108));
+        return stringToPrint.toString();
     }
 
     private String PrintData() {
@@ -227,89 +251,90 @@ public class MenuActivity extends AppCompatActivity {
             return "";
         }
 
-//        StringBuilder sbprint = new StringBuilder();
-//        //打印浓度
-//        sbprint.append(Handware.Manager.Print_heat_factor(15));
-//        //设置字体大小
-//        sbprint.append(getprintstytle(4));
-//        //设置字体居中
-//        sbprint.append(Handware.Manager.Print_align(1));
-//        sbprint.append("银联POS签购单\r\n");
-//        //设置左对齐
-//        sbprint.append(Handware.Manager.Print_align(0));
-//        sbprint.append(getprintstytle(2));
-//        sbprint.append("==============================\r\n");
-//
-//        sbprint.append(getprintitem("商户名称(MERCHANT NAME)", "测试商户"));
-//        sbprint.append(getprintitem("商户编号(MERCHANT NO.)", "20321545656687"));
-//        sbprint.append(getprintitem("终端编号(TERMINAL NO.)", "25689753"));
-//        sbprint.append(getprintitem("操作员号(OPERATOR NO.)", "01"));
-//        sbprint.append(getprintitem("发卡行号(ISS NO)", "1544"));
-//        sbprint.append(getprintitem("收单行号(ACQ NO)", "0121"));
-//
-//        sbprint.append(getprintstytle(1));
-//        sbprint.append("卡号(CARD NUMBER)\r\n");
-//
-//        sbprint.append(getprintstytle(3));
-//        sbprint.append("62179390*****3426");
-//        sbprint.append("\r\n");
-//
-//
-//        sbprint.append(getprintstytle(1));
-//        sbprint.append("交易类型(TRANS TYPE)");
-//        sbprint.append("\r\n");
-//        sbprint.append(getprintstytle(3));
-//        sbprint.append("消费(S)");
-//        sbprint.append("\r\n");
-//
-//        sbprint.append(getprintitem("有效期(EXP DATE)", "2029"));
-//
-//        sbprint.append(getprintitem("批次号(BATCH NO)", "000012"));
-//        sbprint.append(getprintitem("凭证号(VOUCHER NO)", "000001"));
-//        sbprint.append(getprintitem("授权码(AUTH NO)", "56890547"));
-//
-//        sbprint.append(getprintitem("交易日期/时间(DATE/TIME)", "2016-05-23 16:50:32"));
-//        sbprint.append(getprintitem("交易参考号(REFER NO)", "365897453214"));
-//
-//        sbprint.append(getprintstytle(1));
-//        sbprint.append("金额(AMOUNT)");
-//        sbprint.append("\r\n");
-//
-//        sbprint.append(getprintstytle(3));
-//        sbprint.append("RMB ");
-//        sbprint.append("10.00");
-//        sbprint.append("\r\n");
-//
-//        sbprint.append(getprintstytle(2));
-//        sbprint.append("==============================\r\n");
-//
-//        sbprint.append(getprintstytle(1));
-//        //输出空行
-//        sbprint.append(Handware.Manager.Print_row_space(24));
-//        sbprint.append("持卡人签名(CARD HOLDER SIGNATURE)\r\n");
-//        sbprint.append(Handware.Manager.Print_row_space(72));
-//        sbprint.append("--------------------------------------------\r\n");
-//
-//        sbprint.append("本人确认以上交易，同意将其记入本卡账户 I ACKNOWLEDGE	SATISFACTORY RECEIPT OF RELATIVE GOODS/SERVICES\r\n");
-//
-//        sbprint.append(getprintstytle(2));
-//        sbprint.append("商户存根(MERCHANT COPY)\r\n");
-//
-//        sbprint.append(Handware.Manager.Print_row_space(24));
-//
-//        sbprint.append(getprintstytle(1));
-//        sbprint.append("---X---X---X---X---X--X--X--X--X--X--X--X--X--\r\n");
-//
-//        sbprint.append(Handware.Manager.Print_row_space(108));
-//        return sbprint.toString();
+        StringBuilder stringToPrint = new StringBuilder();
 
-        StringBuilder s = new StringBuilder();
-        s.append("1. item");
-        s.append(Handware.Manager.Print_row_space(108));
-        s.append("dfsafdas");
-        s.append(Handware.Manager.Print_row_space(108));
-        s.append(Handware.Manager.Print_row_space(108));
-        return s.toString();
+        //打印浓度
+        stringToPrint.append(Handware.Manager.Print_heat_factor(15));
+        //设置字体大小
+        stringToPrint.append(getprintstytle(4));
+        //设置字体居中
+        stringToPrint.append(Handware.Manager.Print_align(1));
+        stringToPrint.append("LYNQ\r\n");
+        //设置左对齐
+//        stringToPrint.append(Handware.Manager.Print_align(0));
+//        stringToPrint.append(getprintstytle(2));
+//        stringToPrint.append("==============================\r\n");
+//
+//        stringToPrint.append(getprintitem("(MERCHANT NAME)", "DemoName"));
+//        stringToPrint.append(getprintitem("(MERCHANT NO.)", "20321545656687"));
+//        stringToPrint.append(getprintitem("(TERMINAL NO.)", "25689753"));
+//        stringToPrint.append(getprintitem("(OPERATOR NO.)", "01"));
+//        stringToPrint.append(getprintitem("(ISS NO)", "1544"));
+//        stringToPrint.append(getprintitem("(ACQ NO)", "0121"));
+//
+//        stringToPrint.append(getprintstytle(1));
+//        stringToPrint.append("(CARD NUMBER)\r\n");
+//
+//        stringToPrint.append(getprintstytle(3));
+//        stringToPrint.append("62179390*****3426");
+//        stringToPrint.append("\r\n");
+//
+//
+//        stringToPrint.append(getprintstytle(1));
+//        stringToPrint.append("(TRANS TYPE)");
+//        stringToPrint.append("\r\n");
+//        stringToPrint.append(getprintstytle(3));
+//        stringToPrint.append("(S)");
+//        stringToPrint.append("\r\n");
+//
+//        stringToPrint.append(getprintitem("(EXP DATE)", "2029"));
+//
+//        stringToPrint.append(getprintitem("(BATCH NO)", "000012"));
+//        stringToPrint.append(getprintitem("(VOUCHER NO)", "000001"));
+//        stringToPrint.append(getprintitem("(AUTH NO)", "56890547"));
+//
+//        stringToPrint.append(getprintitem("(DATE/TIME)", "2016-05-23 16:50:32"));
+//        stringToPrint.append(getprintitem("(REFER NO)", "365897453214"));
+//
+//        stringToPrint.append(getprintstytle(1));
+//        stringToPrint.append("(AMOUNT)");
+//        stringToPrint.append("\r\n");
+//
+//        stringToPrint.append(getprintstytle(3));
+//        stringToPrint.append("RMB ");
+//        stringToPrint.append("10.00");
+//        stringToPrint.append("\r\n");
+//
+//        stringToPrint.append(getprintstytle(2));
+//        stringToPrint.append("==============================\r\n");
+//
+//        stringToPrint.append(getprintstytle(1));
+//        //输出空行
+//        stringToPrint.append(Handware.Manager.Print_row_space(24));
+//        stringToPrint.append("(CARD HOLDER SIGNATURE)\r\n");
+//        stringToPrint.append(Handware.Manager.Print_row_space(72));
+//        stringToPrint.append("--------------------------------------------\r\n");
+//
+//        stringToPrint.append("I ACKNOWLEDGE	SATISFACTORY RECEIPT OF RELATIVE GOODS/SERVICES\r\n");
+
+        stringToPrint.append(getprintstytle(2));
+        stringToPrint.append("(MERCHANT COPY)\r\n");
+
+        stringToPrint.append(Handware.Manager.Print_row_space(24));
+
+        if (SignActivity.mBitmap != null)
+            stringToPrint.append(SignActivity.mBitmap);
+
+        stringToPrint.append(Handware.Manager.Print_row_space(108));
+        osl_print_add(stringToPrint.toString());
+//        PrintWriteWithPage();
+
+        stringToPrint.append(getprintstytle(1));
+        stringToPrint.append("---X---X---X---X---X--X--X--X--X--X--X--X--X--\r\n");
+
+        stringToPrint.append(Handware.Manager.Print_row_space(108));
+
+        return stringToPrint.toString();
     }
 
     public static String getprintstytle(int s){

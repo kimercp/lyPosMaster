@@ -3,12 +3,12 @@
 
     <!-- Base application theme. -->
     <!--<style name="AppTheme" parent="Base.ThemeOverlay.AppCompat">-->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
-        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
-        <!--<item name="colorAccent">@color/colorAccent</item>-->
-    </style>
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">-->
+        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="colorPrimary">@color/colorPrimary</item>&ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="colorPrimaryDark">@color/colorPrimaryDark</item>&ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="colorAccent">@color/colorAccent</item>&ndash;&gt;-->
+    <!--</style>-->
 
     <style name="dialogTheme" parent="android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
@@ -47,6 +47,140 @@
         <item name="android:scrollbarTrackHorizontal">@drawable/sb_track</item>
         <item name="android:scrollbarSize">@dimen/dimen_15</item>
         <item name="android:scrollbarFadeDuration">0</item>
+    </style>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="ThemeActivity" parent = "@android:style/Theme.Light">
+        <item name="android:windowTitleSize">35dip</item>
+        <item name="android:windowTitleStyle">@style/MywindowTitleStyle</item>
+    </style>
+
+    <style name="MywindowTitleStyle">
+        <item name="android:textAppearance">@style/MyWindowTitle</item>
+    </style>
+
+    <style name="MyWindowTitle">
+        <item name="android:textColor">#fff</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="MyButton">
+        <item name="android:background">@drawable/button_s</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmallInverse</item>
+        <item name="android:textColor">@android:color/primary_text_light</item>
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+    </style>
+
+    <style name="AnimationActivity" parent="@android:style/Animation.Activity" mce_bogus="1">
+        <item name="android:activityOpenEnterAnimation">@anim/anim_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/anim_exit</item> -->
+        <item name="android:activityCloseEnterAnimation">@anim/back_enter</item>
+        <item name="android:activityCloseExitAnimation">@anim/back_exit</item>
+
+        <item name="android:colorForeground">@android:color/black</item>
+        <item name="android:colorBackground">@android:color/white</item>
+
+
+    </style>
+
+    <style name="btn_style">
+        <!--<item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item> -->
+        <item name="android:textSize">20sp</item>
+        <!-- <item name="android:textColor">#101010</item>
+        <item name="android:background">@drawable/shape</item>  -->
+    </style>
+
+
+    <style name="text_nor_style">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="btn_active_style">
+        <item name="android:background">@drawable/button_s</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="layout_btn_key_style">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">#101010</item>
+        <item name="android:background">@drawable/button_s</item>
+        <item name="android:layout_marginLeft">1sp</item>
+    </style>
+
+    <style name="layout_btn_line_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_marginTop">1sp</item>
+    </style>
+
+    <style name="DialogStyle">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="dialog_anim_bottom" parent="android:Animation">
+        <!--<item name="@android:windowEnterAnimation">@anim/push_bottom_in</item>-->
+        <!--<item name="@android:windowExitAnimation">@anim/push_bottom_out</item>-->
+    </style>
+
+    <style name="dialog_anim_center" parent="android:Animation">
+        <!--<item name="@android:windowEnterAnimation">@anim/center_in</item>-->
+        <!--<item name="@android:windowExitAnimation">@anim/center_out</item>-->
+    </style>
+
+    <style name="dialog_anim" parent="android:Animation">
+        <!--<item name="@android:windowEnterAnimation">@anim/push_right_in</item>-->
+        <!--<item name="@android:windowExitAnimation">@anim/push_right_out</item>-->
+    </style>
+
+    <!-- 灰色选项分隔线 -->
+    <style name="ItemDividingLine">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">#cccccc</item>
+    </style>
+
+    <!-- 红色选项分隔线 -->
+    <style name="ItemDividingLineRed">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.5dp</item>
+        <item name="android:background">#f54d4f</item>
+    </style>
+
+    <style name="IDLabelStyle">
+        <item name="android:textColor">#ff0099cc</item>
+        <item name="android:layout_width">50.0dip</item>
+        <item name="android:layout_height">25.0dip</item>
+    </style>
+
+    <style name="IDTextStyle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">50.0dip</item>
+        <item name="android:layout_height">25.0dip</item>
     </style>
 
 </resources>

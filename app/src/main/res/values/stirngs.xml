@@ -84,4 +84,8 @@
     <string name="msg_printing">printing</string>
     <string name="msg_nopaper">printer out of paper, please load paper</string>
 
+    <string name="text_print"> Click printing</string>
+    <string name="text_clear">Delete </string>
+    <string name="text_tip"> Please sign at below space, then click printing...</string>
+
 </resources>

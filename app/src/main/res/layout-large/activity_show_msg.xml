@@ -1,0 +1,85 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/base_app_bar" />
+
+    <LinearLayout
+        android:id="@+id/lly_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:text="Large Text"
+            android:textSize="@dimen/font_size_69px" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/lly_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+
+
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btncancel"
+            style="@style/btn_style"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_height"
+            android:layout_weight="1"
+            android:visibility="visible"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/selector_stroke_f9ad2c_8_bg"
+            android:text="cancel"
+            android:textColor="@color/font_color_f9ad2c" />
+
+        <Button
+            android:id="@+id/btnOk"
+            style="@style/btn_style"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_height"
+            android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/button_selector_red_3_bg"
+            android:text="OK"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lly_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/lly_bottom"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="58dp"
+        android:orientation="vertical"
+        android:visibility="gone" />
+
+</RelativeLayout>
